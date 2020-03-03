@@ -1,17 +1,19 @@
 package com.example.recyclerviewejemplo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.recyclerviewejemplo.model.Animal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AnimalAdapter.OnItemClickOnListener {
 
     private RecyclerView recyclerView;
     private AnimalAdapter mAdapter;
@@ -23,10 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView=findViewById(R.id.recyclerView);
 
-        mAdapter=new AnimalAdapter(inciaAnimales(),this);
+        mAdapter=new AnimalAdapter(inciaAnimales(),this,this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); //se comenta para ver ahora como grilla
+
+        // GridLayoutManager gridLayoutManager;
+        // gridLayoutManager=new GridLayoutManager(this,2);
+        // recyclerView.setLayoutManager(gridLayoutManager);
 
 
     }//on create
@@ -51,5 +57,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(AnimalAdapter.ViewHolder viewHolder, String nameAnimal, String url) {
+        Toast.makeText(this,nameAnimal,Toast.LENGTH_SHORT).show();
+        instanceDetailFragment(nameAnimal,url);
+    }
+
+    private void instanceDetailFragment(String name,String url){
+
+        DetailFragment detailFragment=DetailFragment.newInstance(name, url);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.frameLayout,detailFragment,"FRAGMENTO DE DETALLES")
+        .commit();
+
+    }
 
 }//class
